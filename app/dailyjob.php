@@ -54,7 +54,7 @@ class DailyTrafficNotification
                 if (!$isEnabled) {
                     continue; // 如果安全组已禁用，不发送通知
                 }
-                // $usagePercentage =0.45;
+                // $usagePercentage =0.15;
 
                 // 进度条
                 $progress = round($usagePercentage, 0);
@@ -63,12 +63,19 @@ class DailyTrafficNotification
                 $progress_do_text = "■";
                 $progress_undo_text = "□";
 
-                $progress_do_num = min($progress_all_num, round(0.5 + (($progress_all_num * intval($progress)) / 100)));
-
+                // 处理0.1%到0.99%进度时进度条展示
+                if (floatval($usagePercentage) > 0 && floatval($usagePercentage) < 1) {
+                    $progress_do_num = 1;
+                // 处理0%进度时进度条展示
+                } elseif (intval($progress) == 0) {
+                    $progress_do_num = 0;
                 // 处理96%-100%进度时进度条展示，正常计算时，进度大于等于96%就已是满条，需单独处理
-                if (95 < intval($progress) && intval($progress) < 100) {
+                } elseif (intval($progress) > 95 && floatval($usagePercentage) < 100) {
                     $progress_do_num = $progress_all_num - 1;
+                } else {
+                    $progress_do_num = min($progress_all_num, round(0.5 + (($progress_all_num * intval($progress)) / 100)));
                 }
+
 
                 // 计算未完成部分
                 $progress_undo_num = $progress_all_num - $progress_do_num;
@@ -428,6 +435,9 @@ class DailyTrafficNotification
         $response = json_decode($result, true);
         // 如果返回结果中 errcode 为 0，表示操作成功，返回 true，否则返回 false
         if ($response && $response['errcode'] === 0) {
+            echo PHP_EOL;
+            echo $title . PHP_EOL;
+            echo $message . PHP_EOL;
             return true;
         } else {
             return false;
