@@ -8,7 +8,7 @@ return [
             'regionId' => 'cn-hongkong',     // 阿里云 regionId, cityId 请参考 https://help.aliyun.com/document_detail/40654.html
             'instanceId' => 'i-***',         // 阿里云实例ID, https://ecs.console.aliyun.com/server/region/cn-hongkong?accounttraceid#/ 查看
             'maxTraffic' => 180,             // 设置流量限制，单位为G
-            'enableNotification' => true    // 是否启用每日通知，true表示需要通知，false表示不通知
+            'enableNotification' => true    // 是否启用每日通知，false表示不通知，默认不填时为true
         ]
         // [
         //     'accountName' => 'xxxx',
